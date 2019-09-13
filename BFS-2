@@ -1,0 +1,150 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+struct Node;
+struct Vertex
+{
+    char name;
+    int mark;
+    struct Node *list;
+};
+
+struct Node
+{
+    struct Vertex* vertex;
+    struct Node* next;
+};
+
+Vertex* new_vetex(char name)
+{
+    Vertex* vertex=(Vertex*)malloc(sizeof(struct Vertex));
+    vertex->name=name;
+    vertex->mark=0;
+    vertex->list=0;
+
+    return vertex;
+}
+
+void do_connect(Vertex*a ,Vertex*b)
+{
+    Node* node = (Node*)malloc(sizeof(Node));
+    node->vertex=b;
+    node->next=a->list;
+    a->list=node;
+}
+
+void connect(Vertex* a, Vertex*b)
+{
+    do_connect(a,b);
+    do_connect(b,a);
+}
+
+Node* CreateQueue()
+{
+    Node* Q = (Node*)malloc(sizeof(Node));
+    Q->vertex=0;
+    Q->next=0;
+    return Q;
+}
+
+void EnQueue(Node* Q, Vertex* v)
+{
+    //  cout<<Q->next<<Q->vertex<<" v= "<<v->name;
+    if(Q->vertex==0)
+    {
+        // cout<<v->name;
+        Q->vertex=v;
+
+        cout<<" "<<Q->vertex->name;
+        Q->next=0;
+
+
+    }
+    else
+    {
+        Node* temp = (Node*)malloc(sizeof(Node));
+        Q->next=temp;
+        temp->vertex=v;
+        temp->next=Q->next;
+        Q->next=temp;
+
+
+    }
+}
+
+Vertex* DeQueue(Node* Q)
+{
+    Node* temp=Q;
+    temp=temp->next;
+    Q=temp;
+}
+
+
+int main()
+{
+    Vertex* graph[10]=
+    {
+
+        new_vetex('A'),
+        new_vetex('B'),
+        new_vetex('C'),
+        new_vetex('D'),
+        new_vetex('E'),
+        new_vetex('F'),
+        new_vetex('F'),
+        new_vetex('G'),
+        new_vetex('I'),
+        new_vetex('J')
+    };
+
+    connect(graph[0],graph[2]);
+    connect(graph[0],graph[4]);
+    connect(graph[0],graph[3]);
+    connect(graph[1],graph[4]);
+    connect(graph[1],graph[5]);
+    connect(graph[2],graph[3]);
+    connect(graph[2],graph[5]);
+    connect(graph[4],graph[5]);
+    connect(graph[6],graph[7]);
+    connect(graph[6],graph[9]);
+    connect(graph[7],graph[8]);
+    connect(graph[8],graph[9]);
+
+    Vertex** p=graph;
+
+    for(int i=1; i<=10; i++)
+    {
+        cout<<(*p)->name<<" -> "<<(*p)->mark<<" = ";
+        Node* q=(*p)->list;
+        while((q)!=0)
+        {
+            cout<<q->vertex->name<<" ";
+            q=q->next;
+        }
+        cout<<endl;
+        *p++;
+    }
+
+    Node* test=CreateQueue();
+    cout<<endl<<test->vertex<<" "<<test->next;
+
+    EnQueue(test,graph[0]);
+    cout<<" test= "<<test->vertex->name;
+    int i=1;
+    while(test->next!=0)
+    {
+        EnQueue(test,graph[i]);
+        cout<<" test= "<<test->next->vertex->name;
+        i++;
+    }
+
+    /*EnQueue(test,graph[2]);
+    cout<<" test= "<<test->vertex->name;
+
+    EnQueue(test,graph[3]);
+    cout<<" test= "<<test->next->vertex->name;
+
+    EnQueue(test,graph[4]);
+    cout<<" test= "<<test->next->next->vertex->name;*/
+
+}
