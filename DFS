@@ -1,0 +1,86 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define NUM_VERTEX 10
+struct Vertex {
+	char name;
+	int mark;
+	struct Node* list;
+};
+struct Node {
+	struct Vertex* vertex;
+	struct Node* next;
+};
+struct Queue {
+};
+typedef struct Vertex Vertex;
+typedef struct Node Node;
+
+
+
+Vertex* new_vertex(char name) {
+	Vertex* vertex = (Vertex*)malloc(sizeof(Vertex));
+	vertex->name = name;
+	vertex->list = 0;
+	return vertex;
+}
+
+
+
+
+void visit(Vertex* vertex) {
+	printf ("\n%5d. %c", vertex->mark, vertex->name);
+}
+
+
+
+void do_dfs(Vertex *vertex, int* count) {
+	Node* p = vertex->list;
+	vertex->mark = ++(*count);
+	visit (vertex);
+	while (p != 0) {
+		if (!p->vertex->mark) {
+			do_dfs (p->vertex, count);
+		}
+		p = p->next;
+	}
+}
+
+
+
+void dfs(Vertex *graph[]) {
+	int i;
+	int count = 0;
+	// set all to unvisited
+	for (i = 0; i < NUM_VERTEX; i ++) {
+		graph[i]->mark = 0;
+	}
+	// each vertex dfs it
+	for (i = 0; i < NUM_VERTEX; i ++) {
+		if (graph[i]->mark == 0) {
+			do_dfs (graph[i], &count);
+		}
+	}
+}
+
+
+int main ()
+{
+
+
+    Vertex *graph[NUM_VERTEX] = {
+		new_vertex('A'), //[0]
+		new_vertex('B'), //[1]
+		new_vertex('C'), //[2]
+		new_vertex('D'), //[3]
+		new_vertex('E'), //[4]
+		new_vertex('F'), //[5]
+		new_vertex('G'), //[6]
+		new_vertex('H'), //[7]
+		new_vertex('I'), //[8]
+		new_vertex('J')  //[9]
+	};
+
+	printf ("DFS: ");
+	dfs (graph);
+
+}
